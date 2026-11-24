@@ -1,0 +1,18 @@
+[submodule "reference/pcrecomp"]
+	path = reference/pcrecomp
+	url = https://github.com/sp00nznet/pcrecomp.git
+	ignore = dirty
+[submodule "reference/mojoshader"]
+	path = reference/mojoshader
+	url = https://github.com/icculus/mojoshader.git
+	ignore = dirty
+[submodule "reference/dlmalloc"]
+	path = reference/dlmalloc
+	url = https://github.com/aradzie/dlmalloc.git
+	ignore = dirty
+[submodule "reference/astcenc"]
+	path = reference/astcenc
+	url = https://github.com/ARM-software/astc-encoder.git
+[submodule "reference/etcpak"]
+	path = reference/etcpak
+	url = https://github.com/wolfpld/etcpak.git

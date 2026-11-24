@@ -1,0 +1,500 @@
+package port.launcher;
+
+import android.content.Context;
+import java.util.Iterator;
+import java.util.Locale;
+import org.json.JSONObject;
+
+/** The launcher's words in English, Russian, German, Polish and Portuguese. The language follows the system
+ *  (Ukrainian and Belarusian read Russian) unless the player picks one; the port's own texts in
+ *  port.json fall back to English, then to their first language. */
+final class Texts {
+    static final String[] LANGUAGES = {"en", "ru", "de", "pl", "pt"};
+
+    static final int PLAY = 0, RETURN = 1, READY = 2, MISSING = 3, NOT_FOUND_YET = 4, GAME_FILES = 5, FOLDER = 6,
+        ARCHIVE = 7, IMPORT_FOLDER = 8, IMPORT_ARCHIVE = 9, FIXED_HINT = 10, SEARCHING = 11, READING = 12,
+        NOTHING_FOUND = 13, IMPORT_TITLE = 14, IMPORT_BODY = 15, REPLACE = 16, COPY = 17, MOVE = 18, UNPACK = 19,
+        USE_HERE = 20, PLAY_FROM_ARCHIVE = 21, ARCHIVE_STORED = 22, CANCEL = 23, OK = 24, STOP = 25, CONTINUE = 26,
+        STOP_ASK = 27, PROGRESS = 28, DONE = 29, DELETE_ARCHIVE = 30, DELETE = 31, KEEP = 32, INTERRUPTED = 33,
+        JOB_UNPACK = 34, JOB_COPY = 35, JOB_MOVE = 36, JOB_CLEAN = 37, JOB_INDEX = 38, JOB_TEXTURES = 39,
+        PERM_FILES = 40, ALLOW = 41, PERM_LAN = 42, PICKER_DISABLED = 43, PICKER_MISSING = 44, ENABLE = 45,
+        BUILTIN = 46, ALWAYS_BUILTIN = 47, BROWSER_FOLDER = 48, BROWSER_ZIP = 49, BROWSER_SELECT = 50,
+        BROWSER_UP = 51, BROWSER_EMPTY = 52, BROWSER_DENIED = 53, INTERNAL = 54, DOWNLOADS = 55, FREE = 56,
+        HAS_GAME = 57, ZIP_STORED = 58, RENDERER = 59, AVAILABLE = 60, UNAVAILABLE = 61, GPU = 62,
+        R_ANDROID = 63, R_LIBRARIES = 64, R_VULKAN = 65, R_NO_VULKAN = 66, R_ADRENO = 67, R_CONVERTED = 68,
+        N_FALLBACK = 69, N_FAILED = 70, N_APPLIES = 71, OPTIONS = 72, SKIP_INTRO = 73, SPACE = 74, CLEAN = 75,
+        CLEAN_SCAN = 76, CLEAN_NONE = 77, CLEAN_ASK = 78, CLEAN_DONE = 79, ABOUT = 80, VERSION = 81, GITHUB = 82,
+        RELEASES = 83, LICENSES = 84, LANGUAGE = 85, SYSTEM_LANGUAGE = 86, CHECK_UPDATES = 87, CHECKING = 88,
+        UP_TO_DATE = 89, UPDATE_AVAILABLE = 90, DOWNLOAD = 91, WHATS_NEW = 92, SKIP_VERSION = 93,
+        UPDATE_FAILED = 94, UPDATE_SIGNER = 95, UPDATE_AUTO = 96, UPDATE_BANNER = 97, TEXTURES = 98, TEX_WHY = 99,
+        TEX_CONVERT = 100, TEX_UNDO = 101, TEX_DONE = 102, TEX_FOUND = 103, E_NOT_ZIP = 104, E_SPLIT = 105,
+        E_NOT_FOUND = 106, E_UNSAFE = 107, E_METHOD = 108, E_ENCRYPTED = 109, E_CORRUPT = 110, E_FULL = 111,
+        E_READ_ONLY = 112, E_IO = 113, E_CANCELLED = 114, E_REMOTE = 115, E_CHANGED = 116, E_SPACE = 117,
+        E_NO_PATH = 118, E_PICKER = 119, GB = 120, MB = 121, LAST_EXIT = 122, CRASHED = 123, BUILD = 124,
+        PERM_NOTIFY = 125, TEX_NOTHING = 126, NOT_IN_BUILD = 127, CHOOSE_PART = 128, DOWNLOADING = 129,
+        PICKER_DISABLED_BUILTIN = 130, PICKER_MISSING_BUILTIN = 131, KB = 132, NEEDS_FILES_ACCESS = 133, REFUSED = 134,
+        N_FAILED_DEFAULT = 135, LAN_TITLE = 136, LAN_WHY = 137, NOT_NOW = 138, NOTIFY_TITLE = 139, R_UNCHECKED = 140,
+        R_CHECKING = 141, R_CRASH = 142, R_ERROR = 143, R_BC = 144, R_ROBUSTNESS = 145, R_PRESENT = 146, R_FEATURES = 147,
+        R_NOT_TURNIP = 148, R_VULKAN13 = 149, R_UNFIT = 150, N_UNCHECKED = 151, TEX_REMOVE = 152, TEX_REMOVE_ASK = 153,
+        TEX_GONE = 154, TURNIP_DRIVER = 155, TURNIP_BUILTIN = 156, TURNIP_CHOOSE = 157, TURNIP_RESET = 158,
+        TURNIP_COPYING = 159, TURNIP_HINT = 160, E_TURNIP = 161,
+        TEX_DXT_YES = 162, TEX_DXT_NO = 163, TEX_DXT_UNKNOWN = 164,
+        TEX_ORIGINALS = 165, TEX_STATUS = 166, TEX_CHECK_FAILED = 167, COPY_DIAGNOSTICS = 168, DIAGNOSTICS_COPIED = 169, E_CLIPBOARD = 170, RETRY_CHECK = 171, OTHER_ARCHIVE = 172,
+        FOLDER_FOR = 173, NO_EDITION = 174,
+        GOG_IMPORT = 175, GOG_HINT = 176, GOG_PICK = 177, GOG_READING = 178, GOG_BAD_INPUT = 179,
+        GOG_NOT_FOUND = 180, GOG_EDITION = 181, GOG_DESTINATION = 182, GOG_INSTALLING = 183, GROUP_PICK = 184,
+        CHOOSE_GAME_FILES = 185, TURNIP_DOWNLOAD = 186, TURNIP_REPOS = 187, TURNIP_LOADING = 188,
+        TURNIP_NO_RELEASES = 189, TURNIP_RELEASE = 190, TURNIP_NEWER = 191, TURNIP_OLDER = 192,
+        TURNIP_NO_NOTES = 193, TURNIP_NO_FILES = 194, TURNIP_CLEAN = 195, TEX_SAMPLE = 196,
+        VERIFY_MD5 = 197, E_MD5_MISMATCH = 198, R_MALI = 199, PANVK_DRIVER = 200,
+        PANVK_HINT = 201, E_PANVK = 202, BROWSER_DRIVER = 203;
+    /** The last id: the table has one row per id (the selfcheck verifies it). */
+    static final int LAST = BROWSER_DRIVER;
+
+    private static final String[][] TEXTS = {
+        {"Play", "Играть", "Spielen", "Graj", "Jogar"},
+        {"Return to the game", "Вернуться в игру", "Zurück zum Spiel", "Wróć do gry", "Voltar ao jogo"},
+        {"Ready to play", "Готово к запуску", "Bereit zum Spielen", "Gotowe do gry", "Pronto para jogar"},
+        {"Files are missing: %s", "Не хватает файлов: %s", "Es fehlen Dateien: %s", "Brakuje plików: %s", "Faltam arquivos: %s"},
+        {"Not found yet", "Ещё не найдено", "Noch nicht gefunden", "Jeszcze nie znaleziono", "Ainda não encontrado"},
+        {"Game files", "Файлы игры", "Spieldateien", "Pliki gry", "Arquivos do jogo"},
+        {"Folder…", "Папка…", "Ordner…", "Folder…", "Pasta…"},
+        {"ZIP archive…", "ZIP-архив…", "ZIP-Archiv…", "Archiwum ZIP…", "Arquivo ZIP…"},
+        {"Import from a folder…", "Импорт из папки…", "Aus einem Ordner importieren…", "Importuj z folderu…", "Importar de uma pasta…"},
+        {"Import from a ZIP…", "Импорт из ZIP…", "Aus einem ZIP importieren…", "Importuj z ZIP…", "Importar de um ZIP…"},
+        {"The port reads this part only from this folder.", "Порт читает эту часть только из этой папки.",
+         "Der Port liest diesen Teil nur aus diesem Ordner.", "Port czyta tę część tylko z tego folderu.", "O port lê esta parte somente desta pasta."},
+        {"Looking for the game…", "Ищу игру…", "Suche das Spiel…", "Szukam gry…", "Procurando o jogo…"},
+        {"Reading the archive…", "Читаю архив…", "Lese das Archiv…", "Czytam archiwum…", "Lendo o arquivo…"},
+        {"No game files were found there.", "Там не найдено файлов игры.", "Dort wurden keine Spieldateien gefunden.",
+         "Nie znaleziono tam plików gry.", "Nenhum arquivo do jogo foi encontrado ali."},
+        {"Import the game files?", "Импортировать файлы игры?", "Spieldateien importieren?", "Zaimportować pliki gry?", "Importar os arquivos do jogo?"},
+        {"%1$s\n%2$s → %3$s\nFree there: %4$s", "%1$s\n%2$s → %3$s\nСвободно там: %4$s", "%1$s\n%2$s → %3$s\nDort frei: %4$s",
+         "%1$s\n%2$s → %3$s\nWolne miejsce: %4$s", "%1$s\n%2$s → %3$s\nLivre no destino: %4$s"},
+        {"The folder already holds files; they are replaced.", "В папке уже есть файлы — они будут заменены.",
+         "Der Ordner enthält bereits Dateien; sie werden ersetzt.", "Folder zawiera już pliki — zostaną zastąpione.", "A pasta já contém arquivos; eles serão substituídos."},
+        {"Copy", "Скопировать", "Kopieren", "Kopiuj", "Copiar"},
+        {"Move", "Переместить", "Verschieben", "Przenieś", "Mover"},
+        {"Unpack", "Распаковать", "Entpacken", "Rozpakuj", "Extrair"},
+        {"Use this folder", "Использовать эту папку", "Diesen Ordner verwenden", "Użyj tego folderu", "Usar esta pasta"},
+        {"Play from the archive", "Играть из архива", "Aus dem Archiv spielen", "Graj z archiwum", "Jogar direto do arquivo"},
+        {"The archive's files are not compressed: the game can read it as it is, without unpacking. Keep the archive "
+             + "where it is. Compressed files beside it: %s.",
+         "Файлы архива не сжаты: игра может читать его как есть, без распаковки. Не перемещайте архив. "
+             + "Сжатых файлов, которые будут распакованы рядом: %s.",
+         "Die Dateien im Archiv sind nicht komprimiert: Das Spiel kann es ohne Entpacken lesen. Lassen Sie das Archiv, "
+             + "wo es ist. Komprimierte Dateien, die daneben entpackt werden: %s.",
+         "Pliki archiwum nie są skompresowane: gra może czytać je bez rozpakowywania. Nie przenoś archiwum. "
+             + "Skompresowane pliki rozpakowane obok: %s.", "Os arquivos do ZIP não estão compactados: o jogo pode lê-lo como está, sem extrair. Mantenha o arquivo onde está. Arquivos compactados ao lado dele: %s."},
+        {"Cancel", "Отмена", "Abbrechen", "Anuluj", "Cancelar"},
+        {"OK", "OK", "OK", "OK", "OK"},
+        {"Stop", "Прервать", "Stoppen", "Przerwij", "Parar"},
+        {"Continue", "Продолжить", "Fortsetzen", "Kontynuuj", "Continuar"},
+        {"Stop? What was done so far is removed.", "Прервать? Сделанное будет удалено.",
+         "Stoppen? Bisher Erledigtes wird entfernt.", "Przerwać? Dotychczasowa praca zostanie usunięta.", "Parar? O que foi feito até agora será removido."},
+        {"%1$s of %2$s", "%1$s из %2$s", "%1$s von %2$s", "%1$s z %2$s", "%1$s de %2$s"},
+        {"Done", "Готово", "Fertig", "Gotowe", "Concluído"},
+        {"The game files are in %1$s.\n\nDelete the archive %2$s (%3$s)?", "Файлы игры в папке %1$s.\n\nУдалить архив %2$s (%3$s)?",
+         "Die Spieldateien liegen in %1$s.\n\nDas Archiv %2$s (%3$s) löschen?", "Pliki gry są w %1$s.\n\nUsunąć archiwum %2$s (%3$s)?", "Os arquivos do jogo estão em %1$s.\n\nExcluir o arquivo %2$s (%3$s)?"},
+        {"Delete", "Удалить", "Löschen", "Usuń", "Excluir"},
+        {"Keep", "Оставить", "Behalten", "Zachowaj", "Manter"},
+        {"The last import was interrupted; its leftovers are removed.", "Прошлый импорт прервался — его остатки удалены.",
+         "Der letzte Import wurde unterbrochen; seine Reste wurden entfernt.", "Poprzedni import został przerwany — jego pozostałości usunięto.", "A última importação foi interrompida; os restos dela foram removidos."},
+        {"Unpacking", "Распаковка", "Entpacken", "Rozpakowywanie", "Extraindo"},
+        {"Copying", "Копирование", "Kopieren", "Kopiowanie", "Copiando"},
+        {"Moving", "Перемещение", "Verschieben", "Przenoszenie", "Movendo"},
+        {"Removing files", "Удаление файлов", "Dateien entfernen", "Usuwanie plików", "Removendo arquivos"},
+        {"Preparing the archive", "Подготовка архива", "Archiv vorbereiten", "Przygotowanie archiwum", "Preparando o arquivo"},
+        {"Converting textures", "Конвертация текстур", "Texturen konvertieren", "Konwersja tekstur", "Convertendo texturas"},
+        {"The game reads its files from the device's storage: allow access to all files.",
+         "Игра читает свои файлы из памяти устройства: разрешите доступ ко всем файлам.",
+         "Das Spiel liest seine Dateien aus dem Gerätespeicher: Erlauben Sie den Zugriff auf alle Dateien.",
+         "Gra czyta swoje pliki z pamięci urządzenia: zezwól na dostęp do wszystkich plików.", "O jogo lê seus arquivos do armazenamento do aparelho: permita o acesso a todos os arquivos."},
+        {"Allow", "Разрешить", "Erlauben", "Zezwól", "Permitir"},
+        {"Network games over Wi-Fi (LAN) need access to devices on the local network.",
+         "Для сетевой игры по Wi-Fi (LAN) нужен доступ к устройствам в локальной сети.",
+         "Netzwerkspiele über WLAN (LAN) brauchen Zugriff auf Geräte im lokalen Netzwerk.",
+         "Gra sieciowa przez Wi-Fi (LAN) wymaga dostępu do urządzeń w sieci lokalnej.", "Jogos em rede por Wi-Fi (LAN) precisam de acesso aos dispositivos da rede local."},
+        {"The system file picker (Files) is turned off on this device.", "Системный выбор файлов («Файлы») отключён на этом устройстве.",
+         "Die Dateiauswahl des Systems („Dateien“) ist auf diesem Gerät deaktiviert.",
+         "Systemowy wybór plików („Pliki”) jest wyłączony na tym urządzeniu.", "O seletor de arquivos do sistema (Arquivos) está desativado neste aparelho."},
+        {"This device has no system file picker.", "На устройстве нет системного выбора файлов.",
+         "Dieses Gerät hat keine Dateiauswahl des Systems.", "To urządzenie nie ma systemowego wyboru plików.", "Este aparelho não tem um seletor de arquivos do sistema."},
+        {"Turn on", "Включить", "Aktivieren", "Włącz", "Ativar"},
+        {"Built-in browser", "Встроенный браузер", "Eingebauter Browser", "Wbudowana przeglądarka", "Navegador integrado"},
+        {"Always use the built-in file browser", "Всегда использовать встроенный браузер файлов",
+         "Immer den eingebauten Dateibrowser verwenden", "Zawsze używaj wbudowanej przeglądarki plików", "Sempre usar o navegador de arquivos integrado"},
+        {"Choose a folder", "Выберите папку", "Ordner wählen", "Wybierz folder", "Escolha uma pasta"},
+        {"Choose a ZIP archive", "Выберите ZIP-архив", "ZIP-Archiv wählen", "Wybierz archiwum ZIP", "Escolha um arquivo ZIP"},
+        {"Choose this folder", "Выбрать эту папку", "Diesen Ordner wählen", "Wybierz ten folder", "Escolher esta pasta"},
+        {"Up", "Вверх", "Nach oben", "W górę", "Subir"},
+        {"The folder is empty", "Папка пуста", "Der Ordner ist leer", "Folder jest pusty", "A pasta está vazia"},
+        {"No access to this folder.", "Нет доступа к этой папке.", "Kein Zugriff auf diesen Ordner.", "Brak dostępu do tego folderu.", "Sem acesso a esta pasta."},
+        {"Internal storage", "Внутренняя память", "Interner Speicher", "Pamięć wewnętrzna", "Armazenamento interno"},
+        {"Downloads", "Загрузки", "Downloads", "Pobrane", "Downloads"},
+        {"%s free", "свободно %s", "%s frei", "wolne: %s", "%s livres"},
+        {"game files: %s", "файлы игры: %s", "Spieldateien: %s", "pliki gry: %s", "arquivos do jogo: %s"},
+        {"not compressed: playable without unpacking", "без сжатия: можно играть без распаковки",
+         "nicht komprimiert: ohne Entpacken spielbar", "bez kompresji: można grać bez rozpakowywania", "sem compactação: dá pra jogar sem extrair"},
+        {"Renderer", "Отрисовка", "Renderer", "Renderer", "Renderizador"},
+        {"available", "доступно", "verfügbar", "dostępny", "disponível"},
+        {"unavailable", "недоступно", "nicht verfügbar", "niedostępny", "indisponível"},
+        {"GPU: %1$s · Vulkan %2$s", "Видеочип: %1$s · Vulkan %2$s", "GPU: %1$s · Vulkan %2$s", "GPU: %1$s · Vulkan %2$s", "GPU: %1$s · Vulkan %2$s"},
+        {"needs Android %1$d or newer (this is API %2$d)", "нужен Android %1$d или новее (здесь API %2$d)",
+         "benötigt Android %1$d oder neuer (hier API %2$d)", "wymaga Androida %1$d lub nowszego (tu API %2$d)", "requer Android %1$d ou mais novo (este é a API %2$d)"},
+        {"this build lacks %s", "в этой сборке нет %s", "in diesem Build fehlt %s", "w tej wersji brakuje %s", "esta versão não tem %s"},
+        {"the system driver offers Vulkan %1$s; %2$s is needed", "системный драйвер даёт Vulkan %1$s, а нужен %2$s",
+         "der Systemtreiber bietet Vulkan %1$s; %2$s wird benötigt", "sterownik systemu oferuje Vulkan %1$s; potrzebny jest %2$s", "o driver do sistema oferece Vulkan %1$s; é necessário %2$s"},
+        {"no Vulkan driver", "нет драйвера Vulkan", "kein Vulkan-Treiber", "brak sterownika Vulkan", "sem driver Vulkan"},
+        {"needs an Adreno %1$d–%2$d GPU; this is %3$s", "нужен видеочип Adreno %1$d–%2$d, здесь %3$s",
+         "benötigt eine Adreno-GPU %1$d–%2$d; hier %3$s", "wymaga GPU Adreno %1$d–%2$d; tu %3$s", "requer uma GPU Adreno %1$d–%2$d; esta é %3$s"},
+        {"cannot read the converted textures", "не читает сконвертированные текстуры",
+         "kann die konvertierten Texturen nicht lesen", "nie odczyta skonwertowanych tekstur", "não consegue ler as texturas convertidas"},
+        {"%1$s is unavailable here (%2$s): the game starts with %3$s.", "%1$s здесь недоступен (%2$s): игра запустится с %3$s.",
+         "%1$s ist hier nicht verfügbar (%2$s): Das Spiel startet mit %3$s.", "%1$s jest tu niedostępny (%2$s): gra uruchomi się z %3$s.", "%1$s não está disponível aqui (%2$s): o jogo inicia com %3$s."},
+        {"The last start with %1$s did not reach the menu%2$s. If the game does not start, choose %3$s.",
+         "Прошлый запуск с %1$s не дошёл до меню%2$s. Если игра не запускается, выберите %3$s.",
+         "Der letzte Start mit %1$s erreichte das Menü nicht%2$s. Startet das Spiel nicht, wählen Sie %3$s.",
+         "Ostatnie uruchomienie z %1$s nie dotarło do menu%2$s. Jeśli gra się nie uruchamia, wybierz %3$s.", "A última inicialização com %1$s não chegou ao menu%2$s. Se o jogo não iniciar, escolha %3$s."},
+        {"The choice applies from the next start.", "Выбор применяется со следующего запуска.",
+         "Die Auswahl gilt ab dem nächsten Start.", "Wybór obowiązuje od następnego uruchomienia.", "A escolha vale a partir da próxima inicialização."},
+        {"Options", "Параметры", "Optionen", "Opcje", "Opções"},
+        {"Skip the opening videos", "Пропускать вступительные ролики", "Intro-Videos überspringen", "Pomijaj filmy wprowadzające", "Pular os vídeos de abertura"},
+        {"Storage", "Место", "Speicher", "Miejsce", "Armazenamento"},
+        {"Remove files the game does not use…", "Удалить файлы, которые игра не использует…",
+         "Vom Spiel nicht genutzte Dateien entfernen…", "Usuń pliki, których gra nie używa…", "Remover arquivos que o jogo não usa…"},
+        {"Counting…", "Подсчёт…", "Zähle…", "Liczenie…", "Contando…"},
+        {"Nothing to remove.", "Удалять нечего.", "Nichts zu entfernen.", "Nie ma nic do usunięcia.", "Nada para remover."},
+        {"Remove %1$d files (%2$s)? Saves and settings stay.", "Удалить файлов: %1$d (%2$s)? Сохранения и настройки останутся.",
+         "%1$d Dateien (%2$s) entfernen? Spielstände und Einstellungen bleiben.", "Usunąć plików: %1$d (%2$s)? Zapisy i ustawienia zostaną.", "Remover %1$d arquivos (%2$s)? Os saves e as configurações são mantidos."},
+        {"Freed: %s", "Освобождено: %s", "Freigegeben: %s", "Zwolniono: %s", "Liberado: %s"},
+        {"About", "О порте", "Über den Port", "O porcie", "Sobre"},
+        {"Version %s", "Версия %s", "Version %s", "Wersja %s", "Versão %s"},
+        {"GitHub", "GitHub", "GitHub", "GitHub", "GitHub"},
+        {"Releases", "Релизы", "Releases", "Wydania", "Releases"},
+        {"Licenses", "Лицензии", "Lizenzen", "Licencje", "Licenças"},
+        {"Language", "Язык", "Sprache", "Język", "Idioma"},
+        {"System", "Системный", "System", "Systemowy", "Sistema"},
+        {"Check for updates", "Проверить обновления", "Nach Updates suchen", "Sprawdź aktualizacje", "Verificar atualizações"},
+        {"Checking…", "Проверяю…", "Prüfe…", "Sprawdzam…", "Verificando…"},
+        {"This is the latest version.", "Это последняя версия.", "Das ist die neueste Version.", "To najnowsza wersja.", "Esta é a versão mais recente."},
+        {"Version %1$s is available (installed: %2$s).", "Доступна версия %1$s (установлена %2$s).",
+         "Version %1$s ist verfügbar (installiert: %2$s).", "Dostępna jest wersja %1$s (zainstalowana: %2$s).", "A versão %1$s está disponível (instalada: %2$s)."},
+        {"Download", "Скачать", "Herunterladen", "Pobierz", "Baixar"},
+        {"What's new", "Что нового", "Neuigkeiten", "Co nowego", "Novidades"},
+        {"Skip this version", "Пропустить эту версию", "Diese Version überspringen", "Pomiń tę wersję", "Ignorar esta versão"},
+        {"Could not check for updates: %s", "Не удалось проверить обновления: %s", "Update-Prüfung fehlgeschlagen: %s",
+         "Nie udało się sprawdzić aktualizacji: %s", "Não foi possível verificar atualizações: %s"},
+        {"This release is signed with another key: it cannot be installed over this one. Back up your saves before reinstalling.",
+         "Этот релиз подписан другим ключом: поверх текущей версии он не установится. Перед переустановкой сохраните сохранения.",
+         "Dieses Release ist mit einem anderen Schlüssel signiert und lässt sich nicht darüber installieren. Sichern Sie vor einer Neuinstallation Ihre Spielstände.",
+         "To wydanie jest podpisane innym kluczem: nie zainstaluje się na obecnej wersji. Przed ponowną instalacją zrób kopię zapisów.", "Esta versão foi assinada com outra chave: não dá pra instalá-la por cima desta. Faça backup dos seus saves antes de reinstalar."},
+        {"Check for updates automatically", "Проверять обновления автоматически", "Automatisch nach Updates suchen",
+         "Automatycznie sprawdzaj aktualizacje", "Verificar atualizações automaticamente"},
+        {"Port update %s is available: see the launcher.", "Доступно обновление порта %s — подробности в лаунчере.",
+         "Port-Update %s ist verfügbar: Details im Launcher.", "Dostępna aktualizacja portu %s — szczegóły w launcherze.", "A atualização %s do port está disponível: veja no launcher."},
+        {"Textures", "Текстуры", "Texturen", "Tekstury", "Texturas"},
+        {"This GPU cannot read the format of the game's textures: the processor unpacks every texture while a screen "
+             + "loads, and in video memory it takes 4–8 times more room. Converted once into a format the GPU reads, "
+             + "the textures load at once and need less memory.",
+         "Видеочип не умеет читать формат текстур игры: каждую текстуру при загрузке распаковывает процессор, и в "
+             + "видеопамяти она занимает в 4–8 раз больше места. Один раз сконвертированные в формат видеочипа, "
+             + "текстуры загружаются сразу и требуют меньше памяти.",
+         "Die GPU kann das Texturformat des Spiels nicht lesen: Der Prozessor entpackt jede Textur beim Laden, und im "
+             + "Grafikspeicher braucht sie 4–8-mal mehr Platz. Einmal in ein GPU-Format konvertiert, laden die Texturen "
+             + "sofort und brauchen weniger Speicher.",
+         "GPU nie odczytuje formatu tekstur gry: procesor rozpakowuje każdą teksturę przy wczytywaniu, a w pamięci "
+             + "wideo zajmuje ona 4–8 razy więcej miejsca. Raz skonwertowane do formatu GPU tekstury wczytują się od razu "
+             + "i zajmują mniej pamięci.", "Esta GPU não consegue ler o formato das texturas do jogo: o processador descompacta cada textura enquanto uma tela carrega, e na memória de vídeo ela ocupa de 4 a 8 vezes mais espaço. Convertidas uma vez para um formato que a GPU lê, as texturas carregam na hora e usam menos memória."},
+        {"Convert to %s", "Сконвертировать в %s", "In %s konvertieren", "Konwertuj do %s", "Converter para %s"},
+        {"Delete the converted textures", "Удалить сконвертированные текстуры", "Konvertierte Texturen löschen",
+         "Usuń skonwertowane tekstury", "Excluir as texturas convertidas"},
+        {"Converted to %1$s: %2$s.", "Сконвертировано в %1$s: %2$s.", "In %1$s konvertiert: %2$s.", "Skonwertowano do %1$s: %2$s.", "Convertidas para %1$s: %2$s."},
+        {"Textures to convert: %1$d (%2$s).", "Текстур для конвертации: %1$d (%2$s).", "Zu konvertierende Texturen: %1$d (%2$s).",
+         "Tekstur do konwersji: %1$d (%2$s).", "Texturas para converter: %1$d (%2$s)."},
+        {"This is not a ZIP archive, or it is damaged.", "Это не ZIP-архив, или он повреждён.",
+         "Das ist kein ZIP-Archiv, oder es ist beschädigt.", "To nie jest archiwum ZIP albo jest uszkodzone.", "Isto não é um arquivo ZIP, ou ele está danificado."},
+        {"The archive is split into parts: join them into one ZIP.", "Архив разбит на части: соберите его в один ZIP.",
+         "Das Archiv ist in Teile aufgeteilt: Fügen Sie sie zu einem ZIP zusammen.", "Archiwum jest podzielone na części: połącz je w jeden ZIP.", "O arquivo está dividido em partes: junte-as em um único ZIP."},
+        {"No game files were found in it.", "В нём не найдено файлов игры.", "Darin wurden keine Spieldateien gefunden.",
+         "Nie znaleziono w nim plików gry.", "Nenhum arquivo do jogo foi encontrado nele."},
+        {"The archive has a path leading out of its folder: %s", "В архиве есть путь, ведущий за пределы его папки: %s",
+         "Das Archiv enthält einen Pfad, der aus seinem Ordner führt: %s", "Archiwum zawiera ścieżkę wychodzącą poza jego folder: %s", "O arquivo tem um caminho que sai da sua pasta: %s"},
+        {"The archive is packed with %s; a ZIP packed with Deflate, Deflate64 or not packed is needed.",
+         "Архив сжат методом %s; нужен ZIP со сжатием Deflate, Deflate64 или без сжатия.",
+         "Das Archiv ist mit %s gepackt; nötig ist ein ZIP mit Deflate, Deflate64 oder ohne Kompression.",
+         "Archiwum spakowano metodą %s; potrzebny jest ZIP z kompresją Deflate, Deflate64 lub bez kompresji.", "O arquivo foi compactado com %s; é necessário um ZIP compactado com Deflate, Deflate64 ou sem compactação."},
+        {"The archive is encrypted.", "Архив зашифрован.", "Das Archiv ist verschlüsselt.", "Archiwum jest zaszyfrowane.", "O arquivo está criptografado."},
+        {"%s came out damaged (CRC): the archive is damaged.", "%s распаковался с ошибкой (CRC): архив повреждён.",
+         "%s ist beschädigt (CRC): Das Archiv ist beschädigt.", "%s jest uszkodzony (CRC): archiwum jest uszkodzone.", "%s saiu danificado (CRC): o arquivo está danificado."},
+        {"The storage ran out of space.", "В хранилище кончилось место.", "Der Speicher ist voll.", "Zabrakło miejsca w pamięci.", "O armazenamento ficou sem espaço."},
+        {"The app cannot write there (%s): choose a folder in the device's storage.",
+         "Приложение не может писать туда (%s): выберите папку в памяти устройства.",
+         "Die App kann dort nicht schreiben (%s): Wählen Sie einen Ordner im Gerätespeicher.",
+         "Aplikacja nie może tam zapisywać (%s): wybierz folder w pamięci urządzenia.", "O app não consegue gravar ali (%s): escolha uma pasta no armazenamento do aparelho."},
+        {"Error: %s", "Ошибка: %s", "Fehler: %s", "Błąd: %s", "Erro: %s"},
+        {"Stopped; nothing was changed.", "Остановлено; ничего не изменено.", "Gestoppt; nichts wurde geändert.",
+         "Zatrzymano; nic nie zmieniono.", "Interrompido; nada foi alterado."},
+        {"This file is not on the device (a cloud?): copy it to the device first.",
+         "Этого файла нет на устройстве (облако?): сначала скопируйте его на устройство.",
+         "Diese Datei ist nicht auf dem Gerät (Cloud?): Kopieren Sie sie zuerst auf das Gerät.",
+         "Tego pliku nie ma na urządzeniu (chmura?): najpierw skopiuj go na urządzenie.", "Este arquivo não está no aparelho (está na nuvem?): copie-o para o aparelho primeiro."},
+        {"Some files changed while working; nothing was removed.", "Часть файлов изменилась во время работы — ничего не удалено.",
+         "Einige Dateien haben sich währenddessen geändert; nichts wurde entfernt.", "Część plików zmieniła się w trakcie — nic nie usunięto.", "Alguns arquivos mudaram durante o trabalho; nada foi removido."},
+        {"Not enough space: %1$s needed, %2$s free.", "Не хватает места: нужно %1$s, свободно %2$s.",
+         "Nicht genug Platz: %1$s nötig, %2$s frei.", "Za mało miejsca: potrzeba %1$s, wolne %2$s.", "Espaço insuficiente: %1$s necessários, %2$s livres."},
+        {"This is not in the device's storage (a cloud?): choose a folder on the device.",
+         "Это не в памяти устройства (облако?): выберите папку на устройстве.",
+         "Das liegt nicht im Gerätespeicher (Cloud?): Wählen Sie einen Ordner auf dem Gerät.",
+         "To nie jest w pamięci urządzenia (chmura?): wybierz folder na urządzeniu.", "Isto não está no armazenamento do aparelho (nuvem?): escolha uma pasta no aparelho."},
+        {"The file picker could not be opened: %s", "Не удалось открыть выбор файлов: %s", "Die Dateiauswahl ließ sich nicht öffnen: %s",
+         "Nie udało się otworzyć wyboru plików: %s", "Não foi possível abrir o seletor de arquivos: %s"},
+        {"GB", "ГБ", "GB", "GB", "GB"},
+        {"MB", "МБ", "MB", "MB", "MB"},
+        {" (%s)", " (%s)", " (%s)", " (%s)", " (%s)"},
+        {"the game crashed", "игра упала", "das Spiel ist abgestürzt", "gra uległa awarii", "o jogo travou"},
+        {"build %s", "сборка %s", "Build %s", "kompilacja %s", "build %s"},
+        {"Android will ask to allow notifications: they show the progress of this work while the launcher is in the background.",
+         "Android спросит разрешение на уведомления: в них виден ход работы, пока лаунчер свёрнут.",
+         "Android fragt nach Benachrichtigungen: Sie zeigen den Fortschritt dieser Arbeit, solange der Launcher im Hintergrund ist.",
+         "Android zapyta o zgodę na powiadomienia: pokazują postęp tej pracy, gdy launcher jest w tle.", "O Android vai pedir permissão para notificações: elas mostram o progresso deste trabalho enquanto o launcher está em segundo plano."},
+        {"There are no textures to convert.", "Текстур для конвертации нет.", "Es gibt keine Texturen zu konvertieren.", "Nie ma tekstur do konwersji.", "Não há texturas para converter."},
+        {"This game is not available in the installed build.", "Эта игра недоступна в установленной сборке.",
+         "Dieses Spiel ist im installierten Build nicht verfügbar.", "Ta gra nie jest dostępna w zainstalowanej wersji.", "Este jogo não está disponível na versão instalada."},
+        {"Where are these files?", "Где лежат эти файлы?", "Wo liegen diese Dateien?", "Gdzie są te pliki?", "Onde estão estes arquivos?"},
+        {"Downloading %s", "Загрузка %s", "Lade %s herunter", "Pobieranie %s", "Baixando %s"},
+        {"The system file picker (Files) is turned off on this device. The built-in browser is used instead.",
+         "Системный выбор файлов («Файлы») отключён на этом устройстве. Вместо него используется встроенный браузер.",
+         "Die Dateiauswahl des Systems („Dateien“) ist auf diesem Gerät deaktiviert. Stattdessen wird der eingebaute Browser verwendet.",
+         "Systemowy wybór plików („Pliki”) jest wyłączony na tym urządzeniu. Zamiast niego używana jest wbudowana przeglądarka.", "O seletor de arquivos do sistema (Arquivos) está desativado neste aparelho. O navegador integrado será usado no lugar."},
+        {"This device has no system file picker. The built-in browser is used instead.",
+         "На устройстве нет системного выбора файлов. Вместо него используется встроенный браузер.",
+         "Dieses Gerät hat keine Dateiauswahl des Systems. Stattdessen wird der eingebaute Browser verwendet.",
+         "To urządzenie nie ma systemowego wyboru plików. Zamiast niego używana jest wbudowana przeglądarka.", "Este aparelho não tem um seletor de arquivos do sistema. O navegador integrado será usado no lugar."},
+        {"KB", "КБ", "KB", "KB", "KB"},
+        {"Needs access to all files", "Нужен доступ ко всем файлам", "Zugriff auf alle Dateien nötig", "Wymaga dostępu do wszystkich plików", "Requer acesso a todos os arquivos"},
+        {"The last start stopped before the game began: %s", "Прошлый запуск остановился до начала игры: %s",
+         "Der letzte Start brach vor Spielbeginn ab: %s", "Ostatnie uruchomienie zatrzymało się przed startem gry: %s", "A última inicialização parou antes de o jogo começar: %s"},
+        {"The last start did not reach the menu%s.", "Прошлый запуск не дошёл до меню%s.", "Der letzte Start erreichte das Menü nicht%s.",
+         "Ostatnie uruchomienie nie dotarło do menu%s.", "A última inicialização não chegou ao menu%s."},
+        {"Network games (LAN)", "Сетевая игра (LAN)", "Netzwerkspiele (LAN)", "Gra sieciowa (LAN)", "Jogos em rede (LAN)"},
+        {"To find network games on your Wi-Fi (LAN) and join them, the game needs access to devices on the local network. "
+             + "Android asks for it as \"Nearby devices\"; the game does not use your location. Without it the game still starts, "
+             + "only without LAN games; you can allow it later on the launcher's card.",
+         "Чтобы находить сетевые игры в вашей сети Wi-Fi (LAN) и подключаться к ним, игре нужен доступ к устройствам в "
+             + "локальной сети. Android спросит его как «Устройства поблизости»; местоположение игра не использует. Без разрешения "
+             + "игра тоже запустится, только без игры по LAN; разрешить можно позже на карточке лаунчера.",
+         "Um Netzwerkspiele in Ihrem WLAN (LAN) zu finden und ihnen beizutreten, braucht das Spiel Zugriff auf Geräte im lokalen "
+             + "Netzwerk. Android fragt danach als „Geräte in der Nähe“; Ihren Standort verwendet das Spiel nicht. Ohne die Erlaubnis "
+             + "startet das Spiel trotzdem, nur ohne LAN-Spiele; Sie können sie später auf der Karte im Launcher erlauben.",
+         "Aby znajdować gry sieciowe w twojej sieci Wi-Fi (LAN) i do nich dołączać, gra potrzebuje dostępu do urządzeń w sieci "
+             + "lokalnej. Android zapyta o to jako „Urządzenia w pobliżu”; gra nie używa twojej lokalizacji. Bez tej zgody gra też "
+             + "się uruchomi, tylko bez gry przez LAN; możesz zezwolić później na karcie launchera.", "Para encontrar jogos em rede no seu Wi-Fi (LAN) e entrar neles, o jogo precisa de acesso aos dispositivos da rede local. O Android pede isso como \"Dispositivos por perto\"; o jogo não usa a sua localização. Sem isso o jogo ainda inicia, só que sem jogos em LAN; você pode permitir depois no cartão do launcher."},
+        {"Not now", "Не сейчас", "Nicht jetzt", "Nie teraz", "Agora não"},
+        {"Progress notifications", "Уведомления о ходе работы", "Fortschrittsbenachrichtigungen", "Powiadomienia o postępie", "Notificações de progresso"},
+        {"not checked on this device yet", "ещё не проверен на этом устройстве", "auf diesem Gerät noch nicht geprüft",
+         "jeszcze nie sprawdzony na tym urządzeniu", "ainda não verificado neste aparelho"},
+        {"checking the graphics driver…", "проверяю видеодрайвер…", "Grafiktreiber wird geprüft…", "sprawdzam sterownik grafiki…", "verificando o driver gráfico…"},
+        {"the driver check crashed", "проверка драйвера завершилась сбоем", "die Treiberprüfung ist abgestürzt",
+         "sprawdzanie sterownika uległo awarii", "a verificação do driver travou"},
+        {"Vulkan is unavailable: %s", "Vulkan недоступен: %s", "Vulkan ist nicht verfügbar: %s", "Vulkan jest niedostępny: %s", "Vulkan indisponível: %s"},
+        {"the GPU cannot sample BC (DXT) compressed textures, the format of the game's textures",
+         "видеочип не читает сжатые текстуры BC (DXT), в которых хранятся текстуры игры",
+         "die GPU kann keine BC-(DXT-)komprimierten Texturen lesen, das Format der Spieltexturen",
+         "GPU nie odczytuje tekstur skompresowanych BC (DXT), w których zapisane są tekstury gry", "a GPU não consegue ler texturas compactadas BC (DXT), o formato das texturas do jogo"},
+        {"the driver lacks VK_EXT_robustness2", "в драйвере нет VK_EXT_robustness2", "dem Treiber fehlt VK_EXT_robustness2",
+         "sterownikowi brakuje VK_EXT_robustness2", "o driver não tem VK_EXT_robustness2"},
+        {"the driver cannot show Vulkan on an Android surface", "драйвер не выводит Vulkan на экран Android",
+         "der Treiber kann Vulkan nicht auf einer Android-Oberfläche anzeigen", "sterownik nie wyświetla Vulkana na powierzchni Androida", "o driver não consegue exibir Vulkan em uma superfície do Android"},
+        {"missing Vulkan features DXVK needs: %s", "нет возможностей Vulkan, нужных DXVK: %s",
+         "es fehlen Vulkan-Funktionen, die DXVK braucht: %s", "brak funkcji Vulkana potrzebnych DXVK: %s", "faltam recursos do Vulkan que o DXVK precisa: %s"},
+        {"adrenotools did not load Turnip", "adrenotools не загрузил Turnip", "adrenotools hat Turnip nicht geladen",
+         "adrenotools nie załadował Turnipa", "o adrenotools não carregou o Turnip"},
+        {"the driver offers Vulkan %s; DXVK needs Vulkan 1.3", "драйвер даёт Vulkan %s, а DXVK нужен Vulkan 1.3",
+         "der Treiber bietet Vulkan %s; DXVK braucht Vulkan 1.3", "sterownik oferuje Vulkana %s; DXVK potrzebuje Vulkana 1.3", "o driver oferece Vulkan %s; o DXVK precisa do Vulkan 1.3"},
+        {"the driver does not qualify", "драйвер не подходит", "der Treiber ist nicht geeignet", "sterownik się nie nadaje", "o driver não é compatível"},
+        {"%1$s has not been checked on this device yet; if the game does not start, choose %2$s.",
+         "%1$s ещё не проверен на этом устройстве; если игра не запустится, выберите %2$s.",
+         "%1$s wurde auf diesem Gerät noch nicht geprüft; startet das Spiel nicht, wählen Sie %2$s.",
+         "%1$s nie został jeszcze sprawdzony na tym urządzeniu; jeśli gra się nie uruchomi, wybierz %2$s.", "%1$s ainda não foi verificado neste aparelho; se o jogo não iniciar, escolha %2$s."},
+        {"Delete the original textures (%s)…", "Удалить оригинальные текстуры (%s)…", "Originaltexturen löschen (%s)…",
+         "Usuń oryginalne tekstury (%s)…", "Excluir as texturas originais (%s)…"},
+        {"The game will use only the converted textures: the originals are removed from its files, which frees %s. "
+             + "This cannot be undone: to convert again or into the other format, import the game files anew.",
+         "Игра будет использовать только сконвертированные текстуры: оригиналы удаляются из её файлов, освободится %s. "
+             + "Это необратимо: чтобы сконвертировать заново или в другой формат, файлы игры придётся импортировать снова.",
+         "Das Spiel verwendet dann nur die konvertierten Texturen: Die Originale werden aus seinen Dateien entfernt, das gibt %s frei. "
+             + "Das lässt sich nicht rückgängig machen: Um erneut oder in das andere Format zu konvertieren, importieren Sie die Spieldateien neu.",
+         "Gra będzie używać tylko przekonwertowanych tekstur: oryginały zostaną usunięte z jej plików, co zwolni %s. "
+             + "Tego nie można cofnąć: aby przekonwertować ponownie lub do innego formatu, zaimportuj pliki gry od nowa.", "O jogo usará só as texturas convertidas: as originais serão removidas dos arquivos dele, o que libera %s. Isso não pode ser desfeito: para converter de novo ou para o outro formato, importe os arquivos do jogo outra vez."},
+        {"The original textures are deleted; the conversion can no longer be undone.",
+         "Оригинальные текстуры удалены; конвертацию больше нельзя отменить.",
+         "Die Originaltexturen sind gelöscht; die Konvertierung lässt sich nicht mehr rückgängig machen.",
+         "Oryginalne tekstury zostały usunięte; konwersji nie można już cofnąć.", "As texturas originais foram excluídas; a conversão não pode mais ser desfeita."},
+        {"Turnip driver: %s", "Драйвер Turnip: %s", "Turnip-Treiber: %s", "Sterownik Turnip: %s", "Driver Turnip: %s"},
+        {"the port's own", "встроенный в порт", "der des Ports", "wbudowany w port", "o próprio do port"},
+        {"Own driver…", "Свой драйвер…", "Eigener Treiber…", "Własny sterownik…", "Driver próprio…"},
+        {"Use the port's driver", "Вернуть встроенный", "Treiber des Ports nehmen", "Użyj wbudowanego", "Usar o driver do port"},
+        {"Copying the driver…", "Копирую драйвер…", "Kopiere den Treiber…", "Kopiuję sterownik…", "Copiando o driver…"},
+        {"A Turnip driver package for adrenotools (a ZIP with meta.json) or its .so library. The driver check runs again for it.",
+         "Пакет драйвера Turnip для adrenotools (ZIP с meta.json) или его библиотека .so. Проверка драйвера пройдёт для него заново.",
+         "Ein Turnip-Treiberpaket für adrenotools (ein ZIP mit meta.json) oder seine .so-Bibliothek. Die Treiberprüfung läuft dafür erneut.",
+         "Pakiet sterownika Turnip dla adrenotools (ZIP z meta.json) albo jego biblioteka .so. Sprawdzenie sterownika odbędzie się dla niego ponownie.", "Um pacote de driver Turnip para adrenotools (um ZIP com meta.json) ou a biblioteca .so dele. A verificação do driver roda de novo para ele."},
+        {"This is no Turnip driver: %s", "Это не драйвер Turnip: %s", "Das ist kein Turnip-Treiber: %s", "To nie jest sterownik Turnip: %s", "Isto não é um driver Turnip: %s"},
+        {"DXT is supported", "DXT поддерживается", "DXT wird unterstützt", "DXT jest obsługiwany", "DXT é suportado"},
+        {"DXT is not supported", "DXT не поддерживается", "DXT wird nicht unterstützt", "DXT nie jest obsługiwany", "DXT não é suportado"},
+        {"DXT support could not be checked.", "Не удалось проверить поддержку DXT.",
+         "Die DXT-Unterstützung konnte nicht geprüft werden.", "Nie udało się sprawdzić obsługi DXT.", "Não foi possível verificar o suporte a DXT."},
+        {"Original textures", "Оригинальные текстуры", "Originaltexturen", "Oryginalne tekstury", "Texturas originais"},
+        {"Converted to %s", "Конвертировано в %s", "In %s konvertiert", "Przekonwertowano do %s", "Convertidas para %s"},
+        {"Texture check failed", "Не удалось проверить текстуры", "Texturprüfung fehlgeschlagen", "Nie udało się sprawdzić tekstur", "A verificação das texturas falhou"},
+        {"Copy diagnostic report", "Скопировать отчёт диагностики", "Diagnosebericht kopieren", "Kopiuj raport diagnostyczny", "Copiar relatório de diagnóstico"},
+        {"Diagnostic report copied", "Отчёт диагностики скопирован", "Diagnosebericht kopiert", "Raport diagnostyczny skopiowany", "Relatório de diagnóstico copiado"},
+        {"Could not copy the report", "Не удалось скопировать отчёт", "Bericht konnte nicht kopiert werden", "Nie udało się skopiować raportu", "Não foi possível copiar o relatório"},
+        {"Check again", "Повторить проверку", "Erneut prüfen", "Sprawdź ponownie", "Verificar de novo"},
+        {"Choose another archive…", "Выбрать другой архив…", "Anderes Archiv wählen…", "Wybierz inne archiwum…", "Escolher outro arquivo…"},
+        {"Folder for %s…", "Папка для %s…", "Ordner für %s…", "Folder dla %s…", "Pasta para %s…"},
+        {"%1$s was not found in %2$s. The other editions' folders were kept.",
+         "%1$s не найдена в %2$s. Папки остальных изданий сохранены.",
+         "%1$s wurde in %2$s nicht gefunden. Die Ordner der anderen Editionen wurden beibehalten.",
+         "Nie znaleziono %1$s w %2$s. Foldery pozostałych edycji zostały zachowane.", "%1$s não foi encontrado em %2$s. As pastas das outras edições foram mantidas."},
+        {"Install from GOG…", "Установить из GOG…", "Aus GOG installieren…", "Zainstaluj z GOG…", "Instalar do GOG…"},
+        {"Choose the offline setup EXE in device storage. Keep all its BIN files beside it. All files access is required.",
+         "Выберите EXE офлайн-установщика в памяти устройства. Все его BIN должны лежать рядом. Нужен доступ ко всем файлам.",
+         "Wählen Sie die Offline-Setup-EXE im Gerätespeicher. Alle BIN-Dateien müssen daneben liegen. Zugriff auf alle Dateien ist nötig.",
+         "Wybierz EXE instalatora offline w pamięci urządzenia. Wszystkie pliki BIN muszą znajdować się obok. Wymagany jest dostęp do wszystkich plików.", "Escolha o EXE do instalador offline no armazenamento do aparelho. Mantenha todos os arquivos BIN ao lado dele. É necessário acesso a todos os arquivos."},
+        {"Choose a GOG setup EXE", "Выберите EXE установщика GOG", "GOG-Setup-EXE wählen", "Wybierz EXE instalatora GOG", "Escolha o EXE do instalador do GOG"},
+        {"Reading the GOG installer…", "Читаю установщик GOG…", "GOG-Installer wird gelesen…", "Odczytywanie instalatora GOG…", "Lendo o instalador do GOG…"},
+        {"Could not read the GOG installer. Check the complete EXE and all adjacent BIN files.",
+         "Не удалось прочитать установщик GOG. Проверьте полную загрузку EXE и всех соседних BIN.",
+         "GOG-Installer konnte nicht gelesen werden. Prüfen Sie die vollständige EXE und alle benachbarten BIN-Dateien.",
+         "Nie można odczytać instalatora GOG. Sprawdź kompletny EXE i wszystkie sąsiednie pliki BIN.", "Não foi possível ler o instalador do GOG. Verifique o EXE completo e todos os arquivos BIN ao lado dele."},
+        {"This installer does not contain the game files required by this port.", "В этом установщике нет файлов игры, необходимых этому порту.",
+         "Dieser Installer enthält nicht die von diesem Port benötigten Spieldateien.", "Ten instalator nie zawiera plików gry wymaganych przez ten port.", "Este instalador não contém os arquivos do jogo exigidos por este port."},
+        {"Choose the edition to install", "Выберите издание для установки", "Zu installierende Edition wählen", "Wybierz edycję do instalacji", "Escolha a edição para instalar"},
+        {"The installer is kept. Editions in the same package use one shared folder. The other game package's folder is kept. Choose another destination to use an empty folder or create a game folder inside a chosen parent.",
+         "Установщик сохранится. Издания одного комплекта используют общую папку. Каталог другого комплекта останется прежним. Можно выбрать пустую папку или родительский каталог для новой папки игры.",
+         "Der Installer bleibt erhalten. Editionen desselben Pakets verwenden einen gemeinsamen Ordner. Der Ordner des anderen Spielpakets bleibt erhalten. Als neues Ziel können Sie einen leeren Ordner oder den übergeordneten Ordner für einen neuen Spielordner wählen.",
+         "Instalator zostanie zachowany. Edycje z jednego pakietu używają wspólnego folderu. Folder drugiego pakietu gry nie zmieni się. Możesz wybrać pusty folder lub katalog nadrzędny dla nowego folderu gry.", "O instalador é mantido. Edições do mesmo pacote usam uma pasta compartilhada. A pasta do outro pacote do jogo é mantida. Escolha outro destino para usar uma pasta vazia ou criar uma pasta do jogo dentro da pasta escolhida."},
+        {"Installing from GOG", "Установка из GOG", "Installation aus GOG", "Instalacja z GOG", "Instalando do GOG"},
+        {"Earlier editions used different folders. Choose one complete shared installation; existing files are kept.",
+         "Раньше у изданий были разные папки. Выберите одну полную общую установку; существующие файлы сохранятся.",
+         "Die Editionen verwendeten bisher verschiedene Ordner. Wählen Sie eine vollständige gemeinsame Installation; vorhandene Dateien bleiben erhalten.",
+         "Edycje używały wcześniej różnych folderów. Wybierz jedną kompletną wspólną instalację; istniejące pliki zostaną zachowane.", "Edições anteriores usavam pastas diferentes. Escolha uma instalação compartilhada completa; os arquivos existentes são mantidos."},
+        {"Choose the game data folder or ZIP archive in the Game files section below.",
+         "Укажите путь к игровым данным или ZIP-архив в разделе «Файлы игры» ниже.",
+         "Wählen Sie den Spieldatenordner oder das ZIP-Archiv unten unter Spieldateien.",
+         "Wskaż folder z danymi gry lub archiwum ZIP w sekcji Pliki gry poniżej.", "Escolha a pasta de dados do jogo ou o arquivo ZIP na seção Arquivos do jogo abaixo."},
+        {"Download a Turnip driver", "Скачать драйвер Turnip", "Turnip-Treiber herunterladen", "Pobierz sterownik Turnip", "Baixar um driver Turnip"},
+        {"Turnip repositories", "Репозитории Turnip", "Turnip-Repositories", "Repozytoria Turnip", "Repositórios do Turnip"},
+        {"Loading releases…", "Загрузка релизов…", "Veröffentlichungen werden geladen…", "Wczytywanie wydań…", "Carregando releases…"},
+        {"This repository has no releases.", "В этом репозитории нет релизов.",
+         "Dieses Repository hat keine Veröffentlichungen.", "To repozytorium nie ma wydań.", "Este repositório não tem releases."},
+        {"Turnip release", "Релиз Turnip", "Turnip-Veröffentlichung", "Wydanie Turnip", "Release do Turnip"},
+        {"Newer release", "Более новый релиз", "Neuere Veröffentlichung", "Nowsze wydanie", "Release mais nova"},
+        {"Older release", "Более старый релиз", "Ältere Veröffentlichung", "Starsze wydanie", "Release mais antiga"},
+        {"No release notes.", "Нет описания релиза.", "Keine Versionshinweise.", "Brak opisu wydania.", "Sem notas da release."},
+        {"This release has no driver packages (.zip or .so).", "В этом релизе нет пакетов драйверов (.zip или .so).",
+         "Diese Veröffentlichung enthält keine Treiberpakete (.zip oder .so).", "To wydanie nie zawiera pakietów sterowników (.zip lub .so).", "Esta release não tem pacotes de driver (.zip ou .so)."},
+        {"Delete unused external drivers", "Удалить неиспользуемые внешние драйверы",
+         "Nicht verwendete externe Treiber löschen", "Usuń nieużywane sterowniki zewnętrzne", "Excluir drivers externos não usados"},
+        {"One texture package checked. All packages will be scanned when conversion starts.",
+         "Проверен один пакет текстур. Все пакеты будут проверены при запуске конвертации.",
+         "Ein Texturpaket geprüft. Alle Pakete werden erst bei der Konvertierung durchsucht.",
+         "Sprawdzono jeden pakiet tekstur. Wszystkie pakiety zostaną sprawdzone po rozpoczęciu konwersji.", "Um pacote de texturas verificado. Todos os pacotes serão examinados quando a conversão começar."},
+        {"Checking the archive's MD5…", "Проверка MD5 архива…",
+         "MD5-Prüfsumme des Archivs wird geprüft…", "Sprawdzanie sumy MD5 archiwum…", "Verificando o MD5 do arquivo…"},
+        {"The archive's MD5 checksum does not match the checksum in its file name (%s).",
+         "Контрольная сумма MD5 архива не совпадает с указанной в имени файла (%s).",
+         "Die MD5-Prüfsumme des Archivs stimmt nicht mit der Prüfsumme im Dateinamen überein (%s).",
+         "Suma kontrolna MD5 archiwum nie zgadza się z sumą podaną w nazwie pliku (%s).", "A soma MD5 do arquivo não confere com a soma no nome dele (%s)."},
+        {"requires an ARM Mali or Immortalis GPU. Detected %1$s",
+         "требуется видеочип ARM Mali или Immortalis. Обнаружен %1$s",
+         "benötigt eine ARM Mali- oder Immortalis-GPU. Erkannt wurde %1$s",
+         "wymaga układu ARM Mali lub Immortalis. Wykryto %1$s", "requer uma GPU ARM Mali ou Immortalis. Detectada: %1$s"},
+        {"PanVK driver (%s)", "Драйвер PanVK (%s)", "PanVK-Treiber (%s)", "Sterownik PanVK (%s)", "Driver PanVK (%s)"},
+        {"Choose a PanVK ZIP package or its .so library. The launcher checks the selected driver.",
+         "Выберите пакет PanVK в ZIP или библиотеку .so. Лаунчер проверит выбранный драйвер.",
+         "Wählen Sie ein PanVK-ZIP-Paket oder seine .so-Bibliothek. Der Launcher prüft den ausgewählten Treiber.",
+         "Wybierz pakiet PanVK ZIP lub jego bibliotekę .so. Program uruchamiający sprawdzi wybrany sterownik.", "Escolha um pacote ZIP do PanVK ou a biblioteca .so dele. O launcher verifica o driver escolhido."},
+        {"Could not import the PanVK driver (%s)", "Не удалось импортировать драйвер PanVK (%s)",
+         "PanVK-Treiber konnte nicht importiert werden (%s)", "Nie udało się zaimportować sterownika PanVK (%s)", "Não foi possível importar o driver PanVK (%s)"},
+        {"Choose a Vulkan driver", "Выберите драйвер Vulkan", "Vulkan-Treiber auswählen", "Wybierz sterownik Vulkan", "Escolha um driver Vulkan"},
+    };
+
+    private static int column = -1;
+
+    private Texts() { }
+
+    /** The column of the chosen language: the player's choice, else the system's. */
+    static synchronized int column(Context context) {
+        if (column < 0) {
+            String chosen = context != null ? State.read(context, State.CHOICES).getProperty("language", "") : "";
+            column = index(chosen.isEmpty() ? system() : chosen);
+        }
+        return column;
+    }
+
+    static synchronized void reset() { column = -1; }
+
+    static String system() {
+        String language = Locale.getDefault().getLanguage();
+        return "uk".equals(language) || "be".equals(language) ? "ru" : language;
+    }
+
+    static int index(String language) {
+        for (int i = 0; i < LANGUAGES.length; ++i) if (LANGUAGES[i].equals(language)) return i;
+        return 0;
+    }
+
+    static String language(Context context) { return LANGUAGES[column(context)]; }
+
+    static String t(Context context, int id) { return TEXTS[id][column(context)]; }
+
+    static String fmt(Context context, int id, Object... args) {
+        return String.format(Locale.getDefault(), t(context, id), args);
+    }
+
+    /** A text of port.json: a plain string, or a map by language. */
+    static String of(Context context, Object value) {
+        if (value == null) return "";
+        if (!(value instanceof JSONObject)) return String.valueOf(value);
+        JSONObject map = (JSONObject) value;
+        String text = map.optString(language(context), "");
+        if (text.isEmpty()) text = map.optString("en", "");
+        if (text.isEmpty()) {
+            Iterator<String> keys = map.keys();
+            if (keys.hasNext()) text = map.optString(keys.next(), "");
+        }
+        return text;
+    }
+
+    /** "4.2 GB", "37 MB", "0.4 MB" and, below 0.1 MB, kilobytes ("12 KB", "0.5 KB"). */
+    static String size(Context context, long bytes) {
+        Locale locale = Locale.getDefault();
+        long b = Math.max(0, bytes);
+        if (b >= 1_000_000_000L) return String.format(locale, "%.1f %s", b / 1e9, t(context, GB));
+        if (b >= 100_000L) return String.format(locale, b >= 10_000_000L ? "%.0f %s" : "%.1f %s", b / 1e6, t(context, MB));
+        return String.format(locale, b >= 10_000L || b == 0 ? "%.0f %s" : "%.1f %s", b / 1e3, t(context, KB));
+    }
+
+    static String failure(Context context, Failure f) {
+        switch (f.code) {
+        case Failure.NOT_ZIP: return t(context, E_NOT_ZIP);
+        case Failure.SPLIT: return t(context, E_SPLIT);
+        case Failure.NOT_FOUND: return t(context, E_NOT_FOUND);
+        case Failure.UNSAFE: return fmt(context, E_UNSAFE, f.detail);
+        case Failure.METHOD: return fmt(context, E_METHOD, f.detail);
+        case Failure.ENCRYPTED: return t(context, E_ENCRYPTED);
+        case Failure.CORRUPT: return fmt(context, E_CORRUPT, f.detail);
+        case Failure.FULL: return f.required >= 0 && f.available >= 0
+            ? fmt(context, E_SPACE, size(context, f.required), size(context, f.available)) : t(context, E_FULL);
+        case Failure.READ_ONLY: return fmt(context, E_READ_ONLY, f.detail);
+        case Failure.CANCELLED: return t(context, E_CANCELLED);
+        case Failure.REMOTE: return t(context, E_REMOTE);
+        case Failure.CHANGED: return t(context, E_CHANGED);
+        case Failure.MD5_MISMATCH: return fmt(context, E_MD5_MISMATCH, f.detail);
+        default: return fmt(context, E_IO, f.detail);
+        }
+    }
+}
